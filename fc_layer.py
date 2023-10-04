@@ -2,10 +2,10 @@ import numpy as np
 
 class fc_layer:
     def __init__(self,in_size,out_size,name="Dense",activation="relu"):
-        self.weights_matrix = np.zeros(shape=(in_size,out_size), dtype=np.float16)
+        self.weights_matrix = np.zeros(shape=(in_size+1,out_size), dtype=np.float16)
         self.layer_name = name
         self.activation = activation
-        self.shape = (in_size,out_size)
+        self.shape = (in_size+1,out_size)
 
 
     def __repr__(self):
@@ -29,7 +29,8 @@ class fc_layer:
 
     def feed_forward(self,inputs):
         self.init_params()
-        assert inputs.shape[0] == int(self.shape[0]), "Inputs and out_size do not match"
+        assert inputs.shape[0]+1 == int(self.shape[0]), "Inputs and out_size do not match"
+        inputs = np.append(inputs,1)
         weighted_sum = np.matmul(self.weights_matrix.T,inputs.T)
         activations = self.sigmoid(weighted_sum) if self.activation == 'sigmoid' else self.relu(weighted_sum)
         return activations
